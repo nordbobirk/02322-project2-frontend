@@ -17,7 +17,6 @@ public class TcpClient {
 
     public void sendMessage(String message) throws IOException {
         out.write(message);
-        out.newLine();
         out.flush();
     }
 
