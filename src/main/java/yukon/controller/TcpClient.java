@@ -15,6 +15,16 @@ public class TcpClient {
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
 
+    public void sendMessage(String message) throws IOException {
+        out.write(message);
+        out.newLine();
+        out.flush();
+    }
+
+    public String receiveResponse() throws IOException {
+        return in.readLine();
+    }
+
     public void close() throws IOException {
         socket.close();
     }
