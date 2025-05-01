@@ -7,6 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * The main game view.
+ */
 public class GameView {
 
     private final VBox root;
