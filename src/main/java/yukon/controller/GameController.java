@@ -1,19 +1,38 @@
 package yukon.controller;
 
 import javafx.application.Platform;
+import yukon.model.Board;
+import yukon.util.GameParser;
 import yukon.view.GameView;
 
 import java.io.IOException;
 
 public class GameController {
 
+    /**
+     * Singleton instance
+     */
+    private static GameController instance;
+
+    /**
+     * Game view instance
+     */
     private final GameView gameView;
-    private TcpClient client;
+
+    /**
+     * TCP client instance
+     */
+    private final TcpClient client;
+
+    /**
+     * Board instance
+     */
+    private Board board;
 
     /**
      * Set up the main game view and TCP client.
      */
-    public GameController() {
+    private GameController() {
         gameView = new GameView();
 
         try {
@@ -24,6 +43,18 @@ public class GameController {
 
         gameView.getSendButton().setOnAction(e -> sendMessage());
         gameView.getCommandField().setOnAction(e -> sendMessage());
+    }
+
+    /**
+     * Singleton getter
+     *
+     * @return singleton instance
+     */
+    public static GameController getInstance() {
+        if (instance == null) {
+            instance = new GameController();
+        }
+        return instance;
     }
 
     /**
@@ -64,8 +95,8 @@ public class GameController {
     private void awaitResponse() {
         try {
             String response = client.receiveResponse();
-            // TODO: parse and render better once format is decided
             Platform.runLater(() -> gameView.getBoardArea().setText(response));
+            GameParser.parseGame(response);
         } catch (Exception e) {
             Platform.runLater(() -> gameView.getBoardArea().setText("Error receiving response: " + e.getMessage()));
         }

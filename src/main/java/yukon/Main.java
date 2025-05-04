@@ -23,7 +23,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        gameController = new GameController();
+        gameController = GameController.getInstance();
         Scene scene = new Scene(gameController.getGameView());
         primaryStage.setTitle("Yukon Solitaire");
         primaryStage.setScene(scene);
