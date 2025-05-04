@@ -57,6 +57,11 @@ public class GameController {
         return instance;
     }
 
+    public void updateBoard(Board newBoard) {
+        board = newBoard;
+        // TODO update views
+    }
+
     /**
      * Tell the TCP client to close the connection.
      */

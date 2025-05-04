@@ -38,4 +38,12 @@ public class Card {
         this.next = next;
     }
 
+    public static Card getTail(Card head) {
+        Card current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        return current;
+    }
+
 }
