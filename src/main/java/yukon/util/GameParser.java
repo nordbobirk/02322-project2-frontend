@@ -5,6 +5,7 @@ import yukon.model.Board;
 import yukon.model.Card;
 import yukon.model.GamePhase;
 import yukon.model.Suit;
+import yukon.view.View;
 
 public class GameParser {
 
@@ -13,9 +14,16 @@ public class GameParser {
      * as the board instance in the game controller.
      *
      * @param serializedGame serialized game state
+     * @return the view that should be shown
      */
-    public static void parseGame(String serializedGame) {
+    public static View parseGame(String serializedGame) {
         GameController gameController = GameController.getInstance();
+
+        if (serializedGame.length() <= 10) {
+            // no cards meaning the ongoing game was just quit'ed
+            gameController.updateBoard(null);
+            return View.MAIN_MENU;
+        }
 
         Board newBoard = new Board();
         newBoard.setPhase(getGamePhase(serializedGame));
@@ -29,13 +37,19 @@ public class GameParser {
             parseColumn(serializedGame, 5, newBoard);
             parseColumn(serializedGame, 6, newBoard);
             parseColumn(serializedGame, 7, newBoard);
+
+            gameController.updateBoard(newBoard);
+            return View.PLAY;
         }
 
         if (newBoard.getPhase() == GamePhase.STARTUP) {
             parseStartupDeck(serializedGame, newBoard);
+
+            gameController.updateBoard(newBoard);
+            return View.STARTUP;
         }
 
-        gameController.updateBoard(newBoard);
+        throw new GameParsingException("i dont even know man, shit's fucked");
     }
 
     /**

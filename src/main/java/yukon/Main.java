@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import yukon.controller.GameController;
 import yukon.view.Constants;
+import yukon.view.View;
 
 public class Main extends Application {
 
@@ -26,7 +27,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         gameController = GameController.getInstance();
         Scene scene = new Scene(gameController.getRootView(), Constants.WIDTH, Constants.HEIGHT);
-        gameController.getRootView().gotoMainMenuView();
+        gameController.getRootView().transitionToView(View.MAIN_MENU);
         primaryStage.setTitle(Constants.TITLE);
         primaryStage.setScene(scene);
         primaryStage.show();

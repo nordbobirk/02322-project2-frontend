@@ -5,6 +5,7 @@ import yukon.model.Board;
 import yukon.util.GameParser;
 import yukon.view.RootView;
 import yukon.view.Util;
+import yukon.view.View;
 
 import java.io.IOException;
 
@@ -56,12 +57,50 @@ public class GameController {
     }
 
     /**
+     * Get the root of the main game view.
+     *
+     * @return main game view root
+     */
+    public RootView getRootView() {
+        return rootView;
+    }
+
+    /**
+     * Get the current board instance.
+     *
+     * @return board instance
+     */
+    public Board getBoard() {
+        return board;
+    }
+
+    /**
      * Set a new board instance.
      *
      * @param newBoard new board instance
      */
     public void updateBoard(Board newBoard) {
         board = newBoard;
+    }
+
+    /**
+     * Execute a command with the given argument.
+     *
+     * @param command command
+     * @param arg     argument
+     */
+    public void executeCommand(Command command, String arg) {
+        arg = arg.isBlank() ? "" : arg;
+        sendMessage(Command.getCommandString(command) + " " + arg);
+    }
+
+    /**
+     * Execute a command with no argument.
+     *
+     * @param command command
+     */
+    public void executeCommand(Command command) {
+        sendMessage(Command.getCommandString(command));
     }
 
     /**
@@ -98,7 +137,8 @@ public class GameController {
     private void awaitResponse() {
         try {
             String response = client.receiveResponse();
-            GameParser.parseGame(response);
+            System.out.println("Received response: " + response);
+            parseResponse(response);
         } catch (Exception e) {
             e.printStackTrace();
             Util.alert("An error occurred while parsing the game state", "Failed to parse serialized game state, see stack trace in console.", Alert.AlertType.ERROR);
@@ -106,16 +146,15 @@ public class GameController {
     }
 
     /**
-     * Get the root of the main game view.
-     *
-     * @return main game view root
+     * Parse server response.
+     * @param response server response
      */
-    public RootView getRootView() {
-        return rootView;
-    }
-
-    public Board getBoard() {
-        return board;
+    private void parseResponse(String response) {
+        View oldView = getRootView().getCurrentView();
+        View newView = GameParser.parseGame(response);
+        if (oldView != newView) {
+            getRootView().transitionToView(newView);
+        }
     }
 
 }
