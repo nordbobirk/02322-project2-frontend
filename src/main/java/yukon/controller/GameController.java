@@ -122,6 +122,8 @@ public class GameController {
             return;
         }
 
+        System.out.println("Sending message: " + message);
+
         try {
             client.sendMessage(message);
             awaitResponse();
@@ -147,14 +149,12 @@ public class GameController {
 
     /**
      * Parse server response.
+     *
      * @param response server response
      */
     private void parseResponse(String response) {
-        View oldView = getRootView().getCurrentView();
         View newView = GameParser.parseGame(response);
-        if (oldView != newView) {
-            getRootView().transitionToView(newView);
-        }
+        getRootView().transitionToView(newView);
     }
 
 }
