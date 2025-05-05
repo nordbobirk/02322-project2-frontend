@@ -2,10 +2,18 @@ package yukon.util;
 
 import yukon.controller.GameController;
 import yukon.model.Board;
+import yukon.model.Card;
 import yukon.model.GamePhase;
+import yukon.model.Suit;
 
 public class GameParser {
 
+    /**
+     * Parse a serialized game and set the newly created board
+     * as the board instance in the game controller.
+     *
+     * @param serializedGame serialized game state
+     */
     public static void parseGame(String serializedGame) {
         GameController gameController = GameController.getInstance();
 
@@ -13,9 +21,53 @@ public class GameParser {
         newBoard.setPhase(getGamePhase(serializedGame));
         newBoard.setAutoMoveEnabled(getAutoMoveEnabled(serializedGame));
 
+        if (newBoard.getPhase() == GamePhase.PLAY) {
+            parseColumn(serializedGame, 1, newBoard);
+            parseColumn(serializedGame, 2, newBoard);
+            parseColumn(serializedGame, 3, newBoard);
+            parseColumn(serializedGame, 4, newBoard);
+            parseColumn(serializedGame, 5, newBoard);
+            parseColumn(serializedGame, 6, newBoard);
+            parseColumn(serializedGame, 7, newBoard);
+        }
+
+        if (newBoard.getPhase() == GamePhase.STARTUP) {
+            parseStartupDeck(serializedGame, newBoard);
+        }
+
         gameController.updateBoard(newBoard);
     }
 
+    /**
+     * Parse a startup deck in the STARTUP phase.
+     *
+     * @param serializedGame serialized game state
+     * @param newBoard       new board instance
+     */
+    private static void parseStartupDeck(String serializedGame, Board newBoard) {
+        String startupDeckData = serializedGame.substring(serializedGame.indexOf("@") + 1);
+        String[] cardStrings = startupDeckData.split(",");
+
+        int index = 0;
+        for (String cardString : cardStrings) {
+            Card newCard = parseCard(cardString.length() == 3 ? cardString : cardString.substring(0, 3));
+            int columnIndex = (index % 7) + 1;
+            Card columnHead = newBoard.getColumnHead(columnIndex);
+            if (columnHead == null) {
+                newBoard.setColumnHead(newCard, columnIndex);
+            } else {
+                columnHead.getTail().setNext(newCard);
+            }
+            index++;
+        }
+    }
+
+    /**
+     * Get the game phase from the serialized game state.
+     *
+     * @param serializedGame serialized game state
+     * @return game phase
+     */
     private static GamePhase getGamePhase(String serializedGame) {
         String phaseString = serializedGame.substring(0, serializedGame.indexOf("$"));
         if (phaseString.equals("PLAY")) return GamePhase.PLAY;
@@ -23,6 +75,12 @@ public class GameParser {
         throw new GameParsingException("Unknown phase");
     }
 
+    /**
+     * Get the auto move enabled option from the serialized game state.
+     *
+     * @param serializedGame serialized game state
+     * @return auto move enabled option
+     */
     private static boolean getAutoMoveEnabled(String serializedGame) {
         String autoMoveEnabledString = serializedGame.substring(serializedGame.indexOf("$") + 1, serializedGame.indexOf("@"));
         if (autoMoveEnabledString.equals("0")) return false;
@@ -30,10 +88,87 @@ public class GameParser {
         throw new GameParsingException("Unknown auto move enabled option");
     }
 
-    private static void parseColumn(String serializedGame, int col) {
+    /**
+     * Parse a column on a serialized game in the PLAY phase. Columns
+     * 1-11 correspond to C1-C7 and F1-F4. This creates and sets the card
+     * stacks in the board instance.
+     *
+     * @param serializedGame serialized game state
+     * @param col            column index
+     * @param newBoard       new board instance
+     */
+    private static void parseColumn(String serializedGame, int col, Board newBoard) {
+        String columnData = getColumnData(serializedGame, col);
+        String cardsString = columnData.substring(columnData.indexOf(":") + 1);
+        String[] cardsStrings = cardsString.split(",");
 
+        for (String card : cardsStrings) {
+            Card head = newBoard.getColumnHead(col);
+
+            if (head == null) {
+                newBoard.setColumnHead(parseCard(card), col);
+                continue;
+            }
+
+            newBoard.getColumnHead(col).getTail().setNext(parseCard(card));
+        }
     }
 
+    /**
+     * Parse a serialized card into a card object.
+     *
+     * @param cardString card serialization
+     * @return card object
+     */
+    private static Card parseCard(String cardString) {
+        if (cardString.length() != 3) {
+            throw new GameParsingException("Unknown card string, weird length!");
+        }
+        return new Card(parseSuit(cardString.charAt(1)), parseNumber(cardString.charAt(0)), cardString.charAt(2) == '1', null);
+    }
+
+    /**
+     * Parse a serialized card number into its corresponding
+     * integer value.
+     *
+     * @param number number char
+     * @return number int
+     */
+    private static int parseNumber(char number) {
+        return switch (number) {
+            case 'A' -> 1;
+            case 'T' -> 10;
+            case 'J' -> 11;
+            case 'Q' -> 12;
+            case 'K' -> 13;
+            default -> number - 48;
+        };
+    }
+
+    /**
+     * Parse the serialized card suit into a Suit enum value.
+     *
+     * @param suit suit char
+     * @return Suit enum value
+     */
+    private static Suit parseSuit(char suit) {
+        return switch (suit) {
+            case 'C' -> Suit.CLUBS;
+            case 'H' -> Suit.HEARTS;
+            case 'S' -> Suit.SPADES;
+            case 'D' -> Suit.DIAMONDS;
+            default -> throw new GameParsingException("Unknown suit");
+        };
+    }
+
+    /**
+     * Get a substring of the serialized game state containing all the data
+     * pertaining to a specific column by its index (1-11).
+     *
+     * @param serializedGame serialized game state
+     * @param col            column index (1-11)
+     * @return serialized game state substring
+     */
     private static String getColumnData(String serializedGame, int col) {
         if (col < 1 || col > 11) {
             throw new GameParsingException("Column index must be between 1 and 11");

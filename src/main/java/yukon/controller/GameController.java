@@ -57,6 +57,10 @@ public class GameController {
         return instance;
     }
 
+    /**
+     * Set a new board instance.
+     * @param newBoard new board instance
+     */
     public void updateBoard(Board newBoard) {
         board = newBoard;
         // TODO update views
@@ -103,7 +107,7 @@ public class GameController {
             Platform.runLater(() -> gameView.getBoardArea().setText(response));
             GameParser.parseGame(response);
         } catch (Exception e) {
-            Platform.runLater(() -> gameView.getBoardArea().setText("Error receiving response: " + e.getMessage()));
+            Platform.runLater(() -> gameView.getBoardArea().setText("Error parsing game: " + e.getMessage()));
         }
     }
 

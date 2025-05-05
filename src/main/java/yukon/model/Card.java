@@ -1,5 +1,7 @@
 package yukon.model;
 
+import java.lang.invoke.StringConcatFactory;
+
 public class Card {
 
     private final Suit suit;
@@ -12,6 +14,14 @@ public class Card {
         this.number = number;
         this.shown = shown;
         this.next = next;
+    }
+
+    public Card getTail() {
+        Card current = this;
+        while (current.next != null) {
+            current = current.next;
+        }
+        return current;
     }
 
     public Suit getSuit() {
@@ -38,12 +48,20 @@ public class Card {
         this.next = next;
     }
 
-    public static Card getTail(Card head) {
-        Card current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
-        return current;
+    @Override
+    public String toString() {
+        return String.format("%c%c%d", Card.numberToChar(number), Suit.toChar(suit), shown ? 1 : 0);
+    }
+
+    public static char numberToChar(int number) {
+        return switch (number) {
+            case 1 -> 'A';
+            case 10 -> 'T';
+            case 11 -> 'J';
+            case 12 -> 'Q';
+            case 13 -> 'K';
+            default -> ("" + number).charAt(0);
+        };
     }
 
 }

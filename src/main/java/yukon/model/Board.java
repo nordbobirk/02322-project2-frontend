@@ -1,6 +1,8 @@
 package yukon.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Board {
 
@@ -9,16 +11,16 @@ public class Board {
     private String message;
     private String lastCommand;
 
-    private ArrayList<Card> columns;
-    private ArrayList<Card> foundations;
+    private final List<Card> columns;
+    private final List<Card> foundations;
 
     public Board() {
         this.phase = GamePhase.STARTUP;
         this.autoMoveEnabled = false;
         this.message = "";
         this.lastCommand = "";
-        columns = new ArrayList<>();
-        foundations = new ArrayList<>();
+        columns = new ArrayList<>(Collections.nCopies(7, null));
+        foundations = new ArrayList<>(Collections.nCopies(4, null));
     }
 
     public GamePhase getPhase() {
@@ -64,6 +66,10 @@ public class Board {
             return null;
         }
         return columns.get(i - 1);
+    }
+
+    public void setColumnHead(Card card, int i) {
+        columns.set(i - 1, card);
     }
 
     /**
