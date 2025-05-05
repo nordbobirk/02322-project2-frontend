@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import yukon.controller.GameController;
+import yukon.view.Constants;
 
 public class Main extends Application {
 
@@ -24,8 +25,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         gameController = GameController.getInstance();
-        Scene scene = new Scene(gameController.getGameView());
-        primaryStage.setTitle("Yukon Solitaire");
+        Scene scene = new Scene(gameController.getRootView(), Constants.WIDTH, Constants.HEIGHT);
+        gameController.getRootView().gotoMainMenuView();
+        primaryStage.setTitle(Constants.TITLE);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

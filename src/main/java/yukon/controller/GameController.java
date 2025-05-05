@@ -1,9 +1,10 @@
 package yukon.controller;
 
-import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import yukon.model.Board;
 import yukon.util.GameParser;
-import yukon.view.GameView;
+import yukon.view.RootView;
+import yukon.view.Util;
 
 import java.io.IOException;
 
@@ -15,9 +16,9 @@ public class GameController {
     private static GameController instance;
 
     /**
-     * Game view instance
+     * Root view
      */
-    private final GameView gameView;
+    private final RootView rootView;
 
     /**
      * TCP client instance
@@ -33,16 +34,13 @@ public class GameController {
      * Set up the main game view and TCP client.
      */
     private GameController() {
-        gameView = new GameView();
+        rootView = new RootView();
 
         try {
             client = new TcpClient("localhost", 12345);
         } catch (IOException e) {
             throw new ServerCommunicationException("Failed to establish a connection with the server");
         }
-
-        gameView.getSendButton().setOnAction(e -> sendMessage());
-        gameView.getCommandField().setOnAction(e -> sendMessage());
     }
 
     /**
@@ -59,11 +57,11 @@ public class GameController {
 
     /**
      * Set a new board instance.
+     *
      * @param newBoard new board instance
      */
     public void updateBoard(Board newBoard) {
         board = newBoard;
-        // TODO update views
     }
 
     /**
@@ -78,13 +76,9 @@ public class GameController {
     }
 
     /**
-     * Tell the TCP client to send a message to the server,
-     * getting the message from the command field in the main
-     * game view.
+     * Tell the TCP client to send a message to the server.
      */
-    private void sendMessage() {
-        String message = gameView.getCommandField().getText().trim();
-
+    private void sendMessage(String message) {
         if (message.isEmpty()) {
             return;
         }
@@ -92,10 +86,10 @@ public class GameController {
         try {
             client.sendMessage(message);
             awaitResponse();
-        } catch (Exception ex) {
-            gameView.getBoardArea().setText("Error sending command: " + ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Util.alert("Error while sending message to backend", "An error occurred while sending a message to the backend. Message: " + message + ". See stacktrace in console.", Alert.AlertType.ERROR);
         }
-        gameView.getCommandField().clear();
     }
 
     /**
@@ -104,10 +98,10 @@ public class GameController {
     private void awaitResponse() {
         try {
             String response = client.receiveResponse();
-            Platform.runLater(() -> gameView.getBoardArea().setText(response));
             GameParser.parseGame(response);
         } catch (Exception e) {
-            Platform.runLater(() -> gameView.getBoardArea().setText("Error parsing game: " + e.getMessage()));
+            e.printStackTrace();
+            Util.alert("An error occurred while parsing the game state", "Failed to parse serialized game state, see stack trace in console.", Alert.AlertType.ERROR);
         }
     }
 
@@ -116,8 +110,12 @@ public class GameController {
      *
      * @return main game view root
      */
-    public javafx.scene.layout.Pane getGameView() {
-        return gameView.getRoot();
+    public RootView getRootView() {
+        return rootView;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
 }
