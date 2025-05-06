@@ -1,6 +1,10 @@
 package yukon.view;
 
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import yukon.controller.Command;
 import yukon.controller.GameController;
@@ -41,8 +45,25 @@ public class StartupView extends VBox {
         styleShowCardsButton(showCardsButton);
 
         getChildren().add(new Header(buttons));
-        getChildren().add(new Label("startup view"));
-        getChildren().add(new TextArea(GameController.getInstance().getBoard().serializedBoard));
+        getChildren().add(new Label(GameController.getInstance().getBoard().serializedBoard));
+        HBox cardColumnBox = getCardColumnBox();
+        getChildren().add(cardColumnBox);
+    }
+
+    private HBox getCardColumnBox() {
+        CardColumnView column1View = new CardColumnView(1, true, this::handleClick);
+        CardColumnView column2View = new CardColumnView(2, true, this::handleClick);
+        CardColumnView column3View = new CardColumnView(3, true, this::handleClick);
+        CardColumnView column4View = new CardColumnView(4, true, this::handleClick);
+        CardColumnView column5View = new CardColumnView(5, true, this::handleClick);
+        CardColumnView column6View = new CardColumnView(6, true, this::handleClick);
+        CardColumnView column7View = new CardColumnView(7, true, this::handleClick);
+
+        return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
+    }
+
+    private void handleClick(int column, int index) {
+        // clicks are ignored in STARTUP phase
     }
 
     private void styleShowCardsButton(Button showCardsButton) {
