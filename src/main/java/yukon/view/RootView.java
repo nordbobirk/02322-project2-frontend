@@ -5,10 +5,7 @@ import javafx.scene.layout.VBox;
 
 public class RootView extends VBox {
 
-    private View currentView;
-
     public RootView() {
-        currentView = View.MAIN_MENU;
         setPadding(new Insets(10));
     }
 
@@ -20,26 +17,19 @@ public class RootView extends VBox {
         }
     }
 
-    public View getCurrentView() {
-        return currentView;
-    }
-
     private void gotoMainMenuView() {
         getChildren().clear();
         getChildren().add(new MainMenuView().getRoot());
-        currentView = View.MAIN_MENU;
     }
 
     private void gotoStartupView() {
         getChildren().clear();
-        getChildren().add(new StartupView());
-        currentView = View.STARTUP;
+        getChildren().add(new StartupView().getRoot());
     }
 
     private void gotoPlayView() {
         getChildren().clear();
-        getChildren().add(new GameView());
-        currentView = View.PLAY;
+        getChildren().add(new GameView().getRoot());
     }
 
 }

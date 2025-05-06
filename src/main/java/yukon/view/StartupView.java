@@ -12,7 +12,9 @@ import yukon.controller.GameController;
 import java.util.List;
 import java.util.Optional;
 
-public class StartupView extends VBox {
+public class StartupView {
+
+    private final VBox root;
 
     public StartupView() {
         Button startGameButton = new Button("Start");
@@ -44,10 +46,11 @@ public class StartupView extends VBox {
 
         styleShowCardsButton(showCardsButton);
 
-        getChildren().add(new Header(buttons));
-        getChildren().add(new Label(GameController.getInstance().getBoard().serializedBoard));
-        HBox cardColumnBox = getCardColumnBox();
-        getChildren().add(cardColumnBox);
+        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardColumnBox());
+    }
+
+    public VBox getRoot() {
+        return root;
     }
 
     private HBox getCardColumnBox() {

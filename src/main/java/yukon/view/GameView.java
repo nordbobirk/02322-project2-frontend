@@ -15,7 +15,9 @@ import java.util.Optional;
 /**
  * The main game view.
  */
-public class GameView extends VBox {
+public class GameView {
+
+    private final VBox root;
 
     private Integer selectionCol = null;
     private Integer selectionIndex = null;
@@ -49,11 +51,11 @@ public class GameView extends VBox {
 
         styleAutoMoveButton(autoMoveButton);
 
-        getChildren().add(new Header(buttons));
-        getChildren().add(new Label(GameController.getInstance().getBoard().serializedBoard));
+        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardColumnBox());
+    }
 
-        HBox cardColumnBox = getCardColumnBox();
-        getChildren().add(cardColumnBox);
+    public VBox getRoot() {
+        return root;
     }
 
     private HBox getCardColumnBox() {
