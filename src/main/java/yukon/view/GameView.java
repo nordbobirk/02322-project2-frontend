@@ -51,11 +51,15 @@ public class GameView {
 
         styleAutoMoveButton(autoMoveButton);
 
-        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardColumnBox());
+        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardBoxes());
     }
 
     public VBox getRoot() {
         return root;
+    }
+
+    private HBox getCardBoxes() {
+        return new HBox(10, getCardColumnBox(), getFoundationStackBox());
     }
 
     private HBox getCardColumnBox() {
@@ -70,8 +74,17 @@ public class GameView {
         return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
     }
 
+    private VBox getFoundationStackBox() {
+        FoundationStackView foundation1View = new FoundationStackView(8, this::handleClick);
+        FoundationStackView foundation2View = new FoundationStackView(9, this::handleClick);
+        FoundationStackView foundation3View = new FoundationStackView(10, this::handleClick);
+        FoundationStackView foundation4View = new FoundationStackView(11, this::handleClick);
+
+        return new VBox(10, foundation1View, foundation2View, foundation3View, foundation4View);
+    }
+
     private void handleClick(int column, int index) {
-        if (selectionCol != null && selectionIndex != null && selectionCol != column) {
+        if (selectionCol != null && selectionCol != column) {
             GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectionCol, selectionIndex, column));
             return;
         }
