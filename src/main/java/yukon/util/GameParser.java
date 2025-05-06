@@ -136,7 +136,7 @@ public class GameParser {
      */
     private static Card parseCard(String cardString) {
         if (cardString.length() != 3) {
-            throw new GameParsingException("Unknown card string, weird length!");
+            throw new GameParsingException(String.format("Unknown card string (%s), weird length!", cardString));
         }
         return new Card(parseSuit(cardString.charAt(1)), parseNumber(cardString.charAt(0)), cardString.charAt(2) == '1', null);
     }
