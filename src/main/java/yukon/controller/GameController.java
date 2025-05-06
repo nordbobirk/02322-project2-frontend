@@ -117,7 +117,7 @@ public class GameController {
     /**
      * Tell the TCP client to send a message to the server.
      */
-    private void sendMessage(String message) {
+    public void sendMessage(String message) {
         if (message.isEmpty()) {
             return;
         }
