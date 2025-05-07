@@ -113,18 +113,22 @@ public class GameParser {
      */
     private static void parseColumn(String serializedGame, int col, Board newBoard) {
         String columnData = getColumnData(serializedGame, col);
-        String cardsString = columnData.substring(columnData.indexOf(":") + 1);
-        String[] cardsStrings = cardsString.split(",");
+        String[] cardStrings;
+        try {
+            cardStrings = columnData.substring(columnData.indexOf(":") + 1, columnData.length() - 1).split(",");
+        } catch (Exception e) {
+            cardStrings = new String[0];
+        }
 
-        for (String card : cardsStrings) {
+        for (String cardString : cardStrings) {
             Card head = newBoard.getColumnHead(col);
 
             if (head == null) {
-                newBoard.setColumnHead(parseCard(card), col);
+                newBoard.setColumnHead(parseCard(cardString), col);
                 continue;
             }
 
-            newBoard.getColumnHead(col).getTail().setNext(parseCard(card));
+            newBoard.getColumnHead(col).getTail().setNext(parseCard(cardString));
         }
     }
 
@@ -200,12 +204,21 @@ public class GameParser {
             throw new GameParsingException("Couldn't find column " + prefix);
         }
 
-        int endIndex = serializedGame.indexOf(';', startIndex);
-        if (endIndex == -1) {
-            // might be at the end of the string without semicolon
-            endIndex = serializedGame.length();
+        int nextCol = col + 1;
+        if (nextCol > 11) {
+            return serializedGame.substring(startIndex);
         }
 
+        String nextColPrefix;
+        if (nextCol <= 7) {
+            nextColPrefix = "C" + nextCol + ":";
+        } else {
+            nextColPrefix = "F" + (nextCol - 7) + ":";
+        }
+
+        int endIndex = serializedGame.indexOf(nextColPrefix, startIndex);
+        System.out.println(nextColPrefix);
+        System.out.println(endIndex);
         return serializedGame.substring(startIndex, endIndex);
     }
 
