@@ -18,13 +18,16 @@ public class CardColumnView extends Pane {
     private final boolean interactable;
     private final List<Button> cardButtons = new ArrayList<>();
     private final List<Card> cardList = new ArrayList<>();
-    private final CardClickCallback cardClickCallback;
     private final int column;
     private Integer selectedIndex = null;
 
-    public CardColumnView(int column, boolean interactable, CardClickCallback cardClickCallback) {
+    private final SelectColumnCallback selectColumnCallback;
+    private final SelectEmptyColumnCallback selectEmptyColumnCallback;
+
+    public CardColumnView(int column, boolean interactable, SelectColumnCallback selectColumnCallback, SelectEmptyColumnCallback selectEmptyColumnCallback) {
+        this.selectColumnCallback = selectColumnCallback;
+        this.selectEmptyColumnCallback = selectEmptyColumnCallback;
         this.interactable = interactable;
-        this.cardClickCallback = cardClickCallback;
         this.column = column;
         renderColumn();
     }
@@ -64,7 +67,7 @@ public class CardColumnView extends Pane {
         btn.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
         btn.setStyle(getDefaultStyle(false, true));
         btn.setCursor(Cursor.HAND);
-        btn.setOnAction(e -> cardClickCallback.call(column, -1));
+        btn.setOnAction(e -> selectEmptyColumnCallback.selectEmptyColumn(column));
         return btn;
     }
 
@@ -95,7 +98,7 @@ public class CardColumnView extends Pane {
             // New selection
             highlightFromIndex(index);
             selectedIndex = index;
-            cardClickCallback.call(column, index);
+            selectColumnCallback.selectColumn(column, index);
         }
     }
 

@@ -1,7 +1,6 @@
 package yukon.view;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,7 +21,15 @@ public class GameView {
     private Integer selectionCol = null;
     private Integer selectionIndex = null;
 
+    private Integer selectedColumn;
+    private Integer selectedIndex;
+    private boolean selection;
+
     public GameView() {
+        selectedColumn = null;
+        selectedIndex = null;
+        selection = false;
+
         Button quitButton = new Button("Quit");
         quitButton.setOnAction(e -> {
             quitButtonAction();
@@ -62,27 +69,6 @@ public class GameView {
         return new HBox(10, getCardColumnBox(), getFoundationStackBox());
     }
 
-    private HBox getCardColumnBox() {
-        CardColumnView column1View = new CardColumnView(1, true, this::handleClick);
-        CardColumnView column2View = new CardColumnView(2, true, this::handleClick);
-        CardColumnView column3View = new CardColumnView(3, true, this::handleClick);
-        CardColumnView column4View = new CardColumnView(4, true, this::handleClick);
-        CardColumnView column5View = new CardColumnView(5, true, this::handleClick);
-        CardColumnView column6View = new CardColumnView(6, true, this::handleClick);
-        CardColumnView column7View = new CardColumnView(7, true, this::handleClick);
-
-        return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
-    }
-
-    private VBox getFoundationStackBox() {
-        FoundationStackView foundation1View = new FoundationStackView(8, this::handleClick);
-        FoundationStackView foundation2View = new FoundationStackView(9, this::handleClick);
-        FoundationStackView foundation3View = new FoundationStackView(10, this::handleClick);
-        FoundationStackView foundation4View = new FoundationStackView(11, this::handleClick);
-
-        return new VBox(10, foundation1View, foundation2View, foundation3View, foundation4View);
-    }
-
     private void handleClick(int column, int index) {
         if (selectionCol != null && selectionCol != column) {
             GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectionCol, selectionIndex, column));
@@ -98,6 +84,72 @@ public class GameView {
 
         selectionCol = column;
         selectionIndex = index;
+    }
+
+    private void handleClickOnEmptyColumn(int column) {
+        if (!selection) {
+            // no selection, click on empty col does nothing
+            return;
+        }
+
+        // move selection to column
+        GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectedColumn, selectedIndex, column));
+        clearSelection();
+    }
+
+    private void handleClickOnNotEmptyColumn(int column, int index) {
+        if (!selection) {
+            // no selection, apply new selection
+            selection = true;
+            selectedColumn = column;
+            selectedIndex = index;
+            return;
+        }
+
+        // move selection to column
+        GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectedColumn, selectedIndex, column));
+        clearSelection();
+    }
+
+    private void handleClickOnFoundation(int column) {
+        if (!selection) {
+            // no selection, apply new selection
+            selection = true;
+            selectedColumn = column;
+            selectedIndex = 0; // set as zero since foundations do not require an index
+            return;
+        }
+
+        // move selection to foundation
+        GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectedColumn, selectedIndex, column));
+        clearSelection();
+    }
+
+    private void clearSelection() {
+        selectedColumn = null;
+        selectedIndex = null;
+        selection = false;
+    }
+
+    private HBox getCardColumnBox() {
+        CardColumnView column1View = new CardColumnView(1, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column2View = new CardColumnView(2, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column3View = new CardColumnView(3, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column4View = new CardColumnView(4, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column5View = new CardColumnView(5, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column6View = new CardColumnView(6, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column7View = new CardColumnView(7, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+
+        return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
+    }
+
+    private VBox getFoundationStackBox() {
+        FoundationStackView foundation1View = new FoundationStackView(8, this::handleClickOnFoundation);
+        FoundationStackView foundation2View = new FoundationStackView(9, this::handleClickOnFoundation);
+        FoundationStackView foundation3View = new FoundationStackView(10, this::handleClickOnFoundation);
+        FoundationStackView foundation4View = new FoundationStackView(11, this::handleClickOnFoundation);
+
+        return new VBox(10, foundation1View, foundation2View, foundation3View, foundation4View);
     }
 
     private void styleAutoMoveButton(Button autoMoveButton) {
