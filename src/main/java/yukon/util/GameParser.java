@@ -38,6 +38,11 @@ public class GameParser {
             parseColumn(serializedGame, 6, newBoard);
             parseColumn(serializedGame, 7, newBoard);
 
+            parseColumn(serializedGame, 8, newBoard);
+            parseColumn(serializedGame, 9, newBoard);
+            parseColumn(serializedGame, 10, newBoard);
+            parseColumn(serializedGame, 11, newBoard);
+
             gameController.updateBoard(newBoard);
             return View.PLAY;
         }

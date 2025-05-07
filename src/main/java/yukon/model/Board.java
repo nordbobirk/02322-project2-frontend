@@ -61,7 +61,7 @@ public class Board {
     }
 
     /**
-     * Get the head of a column/foundation based in its index.
+     * Get the head of a column/foundation based on its index.
      *
      * @param i the index of the column (1-11)
      * @return the head of the column
@@ -78,8 +78,19 @@ public class Board {
         return null;
     }
 
-    public void setColumnHead(Card card, int i) {
-        columns.set(i - 1, card);
+    /**
+     * Set the head of a column/foundation based on its index.
+     * @param newHead the card to set as the head
+     * @param i the column index
+     */
+    public void setColumnHead(Card newHead, int i) {
+        if (i > 0 && i < 8) {
+            columns.set(i - 1, newHead);
+        }
+
+        if (i > 7 && i < 12) {
+            foundations.set(i - 1 - 7, newHead);
+        }
     }
 
 }
