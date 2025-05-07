@@ -67,7 +67,7 @@ public class CardColumnView extends Pane {
     private Button createEmptyColumnButton() {
         Button btn = new Button();
         btn.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
-        btn.setStyle(getDefaultStyle(false, true));
+        btn.setStyle(getEmptyStyle());
         btn.setCursor(Cursor.HAND);
         btn.setOnAction(e -> selectEmptyColumnCallback.selectEmptyColumn(column));
         return btn;
@@ -150,6 +150,14 @@ public class CardColumnView extends Pane {
                 "-fx-font-weight: bold;",
                 "-fx-font-size: 16;",
                 "-fx-alignment: ", alignment
+        );
+    }
+
+    private String getEmptyStyle() {
+        return String.join("",
+                "-fx-background-color: lightgray;",
+                "-fx-border-color: black;",
+                "-fx-border-width: 1;"
         );
     }
 
