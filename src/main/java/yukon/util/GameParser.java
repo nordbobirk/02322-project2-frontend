@@ -25,7 +25,7 @@ public class GameParser {
             return View.MAIN_MENU;
         }
 
-        Board newBoard = new Board(serializedGame);
+        Board newBoard = new Board();
         newBoard.setPhase(getGamePhase(serializedGame));
         newBoard.setAutoMoveEnabled(getAutoMoveEnabled(serializedGame));
 

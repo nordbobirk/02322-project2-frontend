@@ -46,7 +46,7 @@ public class StartupView {
 
         styleShowCardsButton(showCardsButton);
 
-        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardColumnBox());
+        root = new VBox(new Header(buttons), getCardColumnBox());
     }
 
     public VBox getRoot() {

@@ -14,12 +14,7 @@ public class Board {
     private final List<Card> columns;
     private final List<Card> foundations;
 
-    // TODO remove serializedBoard
-    public String serializedBoard;
-
-    public Board(String serializedBoard) {
-        this.serializedBoard = serializedBoard;
-
+    public Board() {
         this.phase = GamePhase.STARTUP;
         this.autoMoveEnabled = false;
         this.message = "";

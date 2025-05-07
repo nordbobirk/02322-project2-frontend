@@ -51,7 +51,7 @@ public class GameView {
 
         styleAutoMoveButton(autoMoveButton);
 
-        root = new VBox(new Header(buttons), new Label(GameController.getInstance().getBoard().serializedBoard), getCardBoxes());
+        root = new VBox(new Header(buttons), getCardBoxes());
     }
 
     public VBox getRoot() {
