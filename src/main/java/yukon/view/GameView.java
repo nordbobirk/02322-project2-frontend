@@ -86,6 +86,13 @@ public class GameView {
     private void handleClick(int column, int index) {
         if (selectionCol != null && selectionCol != column) {
             GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectionCol, selectionIndex, column));
+            selectionCol = null;
+            selectionIndex = null;
+            return;
+        }
+
+        if (index == -1) {
+            // click was on an empty column, don't update selection
             return;
         }
 

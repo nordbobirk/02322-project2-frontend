@@ -24,19 +24,27 @@ public class CardColumnView extends Pane {
 
     public CardColumnView(int column, boolean interactable, CardClickCallback cardClickCallback) {
         this.interactable = interactable;
-        renderColumn(GameController.getInstance().getBoard().getColumnHead(column));
         this.cardClickCallback = cardClickCallback;
         this.column = column;
+        renderColumn();
     }
 
-    private void renderColumn(Card card) {
+    private void renderColumn() {
         getChildren().clear();
         cardButtons.clear();
         cardList.clear();
 
+        Card columnHead = GameController.getInstance().getBoard().getColumnHead(column);
+        if (columnHead == null) {
+            Button emptyColumnButton = createEmptyColumnButton();
+            getChildren().add(emptyColumnButton);
+            cardButtons.add(emptyColumnButton);
+            return;
+        }
+
         double yOffset = 0;
         int index = 0;
-        Card current = card;
+        Card current = columnHead;
 
         while (current != null) {
             Button cardButton = createCardButton(current, index);
@@ -49,6 +57,15 @@ public class CardColumnView extends Pane {
             current = current.getNext();
             index++;
         }
+    }
+
+    private Button createEmptyColumnButton() {
+        Button btn = new Button();
+        btn.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
+        btn.setStyle(getDefaultStyle(false, true));
+        btn.setCursor(Cursor.HAND);
+        btn.setOnAction(e -> cardClickCallback.call(column, -1));
+        return btn;
     }
 
     private Button createCardButton(Card card, int index) {
