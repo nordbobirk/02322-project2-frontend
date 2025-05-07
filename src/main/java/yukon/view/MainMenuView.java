@@ -96,13 +96,16 @@ public class MainMenuView {
         String[] argumentParts = result.get().trim().split(" ");
         if (argumentParts.length >= 1) {
             GameController.getInstance().executeCommand(Command.LOAD_GAME, argumentParts[0]);
+            GameController.getInstance().startAndResetTimer();
         } else {
             GameController.getInstance().executeCommand(Command.LOAD_GAME);
+            GameController.getInstance().startAndResetTimer();
         }
     }
 
     private void loadDefaultGameAction() {
         GameController.getInstance().executeCommand(Command.LOAD_GAME);
+        GameController.getInstance().startAndResetTimer();
     }
 
 }

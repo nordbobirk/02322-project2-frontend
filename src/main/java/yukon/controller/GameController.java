@@ -1,6 +1,10 @@
 package yukon.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.util.Duration;
 import yukon.model.Board;
 import yukon.util.GameParser;
 import yukon.view.RootView;
@@ -31,11 +35,17 @@ public class GameController {
      */
     private Board board;
 
+    private int secondsElapsed;
+    private Button timerButton;
+    private Timeline timeline;
+
     /**
      * Set up the main game view and TCP client.
      */
     private GameController() {
         rootView = new RootView();
+
+        timerButton = new Button();
 
         try {
             client = new TcpClient("localhost", 12345);
@@ -54,6 +64,30 @@ public class GameController {
             instance = new GameController();
         }
         return instance;
+    }
+
+    public void startAndResetTimer() {
+        timerButton.setText("00:00");
+        secondsElapsed = 0;
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            secondsElapsed++;
+            timerButton.setText(Util.formatTime(secondsElapsed));
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    public void stopTimer() {
+        timeline.stop();
+    }
+
+    public Button getTimerButton() {
+        return timerButton;
+    }
+
+    public int getSecondsElapsed() {
+        return secondsElapsed;
     }
 
     /**
@@ -155,6 +189,7 @@ public class GameController {
     private void parseResponse(String response) {
         if (response.equals("$WIN$")) {
             getRootView().transitionToView(View.WIN);
+            stopTimer();
             return;
         }
         View newView = GameParser.parseGame(response);

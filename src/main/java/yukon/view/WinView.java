@@ -17,6 +17,10 @@ public class WinView {
         title.setFont(Font.font("Arial", 32));
         title.setTextFill(Color.BLACK);
 
+        Label time = new Label("It only took you " + Util.formatTime(GameController.getInstance().getSecondsElapsed()));
+        time.setFont(Font.font("Arial", 24));
+        time.setTextFill(Color.BLACK);
+
         Button backButton = new Button("Back to main menu");
         backButton.setOnAction(e -> GameController.getInstance().getRootView().transitionToView(View.MAIN_MENU));
 
@@ -25,7 +29,7 @@ public class WinView {
         backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;"));
         backButton.setPrefWidth(200);
 
-        root = new VBox(20, title, backButton);
+        root = new VBox(20, title, time, backButton);
         root.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: white;");
         root.setPrefHeight(Constants.HEIGHT);

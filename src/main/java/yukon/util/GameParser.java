@@ -19,7 +19,9 @@ public class GameParser {
     public static View parseGame(String serializedGame) {
         GameController gameController = GameController.getInstance();
 
-        if (serializedGame.length() <= 10) {
+        String serializedGameWithoutMessage = serializedGame.substring(0, serializedGame.indexOf("#"));
+
+        if (serializedGameWithoutMessage.length() <= 10) {
             // no cards meaning the ongoing game was just quit'ed
             gameController.updateBoard(null);
             return View.MAIN_MENU;
@@ -29,8 +31,6 @@ public class GameParser {
         newBoard.setPhase(getGamePhase(serializedGame));
         newBoard.setAutoMoveEnabled(getAutoMoveEnabled(serializedGame));
         newBoard.setMessage(getMessage(serializedGame));
-
-        String serializedGameWithoutMessage = serializedGame.substring(0, serializedGame.indexOf("#"));
 
         if (newBoard.getPhase() == GamePhase.PLAY) {
             parseColumn(serializedGameWithoutMessage, 1, newBoard);

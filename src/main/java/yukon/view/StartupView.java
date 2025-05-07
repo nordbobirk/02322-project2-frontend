@@ -92,6 +92,7 @@ public class StartupView {
 
     private void startGameButtonAction() {
         GameController.getInstance().executeCommand(Command.START_GAME);
+        GameController.getInstance().startAndResetTimer();
     }
 
     private void shuffleRandomButtonAction() {

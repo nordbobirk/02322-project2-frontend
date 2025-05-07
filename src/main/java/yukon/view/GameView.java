@@ -48,7 +48,9 @@ public class GameView {
         Button saveGameButton = new Button("Save");
         saveGameButton.setOnAction(e -> saveGameButtonAction());
 
-        List<Button> buttons = List.of(quitButton, undoButton, redoButton, autoMoveButton, saveGameButton);
+        Button timerButton = GameController.getInstance().getTimerButton();
+
+        List<Button> buttons = List.of(quitButton, undoButton, redoButton, autoMoveButton, saveGameButton, timerButton);
 
         // apply styling to all buttons except the auto move button
         buttons.stream().filter(button -> !button.getText().contains("Automove")).toList().forEach(button -> {
@@ -68,23 +70,6 @@ public class GameView {
 
     private HBox getCardBoxes() {
         return new HBox(10, getCardColumnBox(), getFoundationStackBox());
-    }
-
-    private void handleClick(int column, int index) {
-        if (selectionCol != null && selectionCol != column) {
-            GameController.getInstance().sendMessage(MoveSerializer.serializeMove(selectionCol, selectionIndex, column));
-            selectionCol = null;
-            selectionIndex = null;
-            return;
-        }
-
-        if (index == -1) {
-            // click was on an empty column, don't update selection
-            return;
-        }
-
-        selectionCol = column;
-        selectionIndex = index;
     }
 
     private void handleClickOnEmptyColumn(int column) {
@@ -171,6 +156,7 @@ public class GameView {
 
     private void quitButtonAction() {
         GameController.getInstance().executeCommand(Command.QUIT_GAME);
+        GameController.getInstance().stopTimer();
     }
 
     private void undoButtonAction() {
