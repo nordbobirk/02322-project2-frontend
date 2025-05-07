@@ -217,8 +217,6 @@ public class GameParser {
         }
 
         int endIndex = serializedGame.indexOf(nextColPrefix, startIndex);
-        System.out.println(nextColPrefix);
-        System.out.println(endIndex);
         return serializedGame.substring(startIndex, endIndex);
     }
 
