@@ -153,6 +153,10 @@ public class GameController {
      * @param response server response
      */
     private void parseResponse(String response) {
+        if (response.equals("$WIN$")) {
+            getRootView().transitionToView(View.WIN);
+            return;
+        }
         View newView = GameParser.parseGame(response);
         getRootView().transitionToView(newView);
     }

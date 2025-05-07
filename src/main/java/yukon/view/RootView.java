@@ -14,6 +14,7 @@ public class RootView extends VBox {
             case MAIN_MENU -> gotoMainMenuView();
             case STARTUP -> gotoStartupView();
             case PLAY -> gotoPlayView();
+            case WIN -> gotoWinView();
         }
     }
 
@@ -30,6 +31,11 @@ public class RootView extends VBox {
     private void gotoPlayView() {
         getChildren().clear();
         getChildren().add(new GameView().getRoot());
+    }
+
+    private void gotoWinView() {
+        getChildren().clear();
+        getChildren().add(new WinView().getRoot());
     }
 
 }
