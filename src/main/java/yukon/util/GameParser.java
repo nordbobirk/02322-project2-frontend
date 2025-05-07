@@ -28,33 +28,40 @@ public class GameParser {
         Board newBoard = new Board();
         newBoard.setPhase(getGamePhase(serializedGame));
         newBoard.setAutoMoveEnabled(getAutoMoveEnabled(serializedGame));
+        newBoard.setMessage(getMessage(serializedGame));
+
+        String serializedGameWithoutMessage = serializedGame.substring(0, serializedGame.indexOf("#"));
 
         if (newBoard.getPhase() == GamePhase.PLAY) {
-            parseColumn(serializedGame, 1, newBoard);
-            parseColumn(serializedGame, 2, newBoard);
-            parseColumn(serializedGame, 3, newBoard);
-            parseColumn(serializedGame, 4, newBoard);
-            parseColumn(serializedGame, 5, newBoard);
-            parseColumn(serializedGame, 6, newBoard);
-            parseColumn(serializedGame, 7, newBoard);
+            parseColumn(serializedGameWithoutMessage, 1, newBoard);
+            parseColumn(serializedGameWithoutMessage, 2, newBoard);
+            parseColumn(serializedGameWithoutMessage, 3, newBoard);
+            parseColumn(serializedGameWithoutMessage, 4, newBoard);
+            parseColumn(serializedGameWithoutMessage, 5, newBoard);
+            parseColumn(serializedGameWithoutMessage, 6, newBoard);
+            parseColumn(serializedGameWithoutMessage, 7, newBoard);
 
-            parseColumn(serializedGame, 8, newBoard);
-            parseColumn(serializedGame, 9, newBoard);
-            parseColumn(serializedGame, 10, newBoard);
-            parseColumn(serializedGame, 11, newBoard);
+            parseColumn(serializedGameWithoutMessage, 8, newBoard);
+            parseColumn(serializedGameWithoutMessage, 9, newBoard);
+            parseColumn(serializedGameWithoutMessage, 10, newBoard);
+            parseColumn(serializedGameWithoutMessage, 11, newBoard);
 
             gameController.updateBoard(newBoard);
             return View.PLAY;
         }
 
         if (newBoard.getPhase() == GamePhase.STARTUP) {
-            parseStartupDeck(serializedGame, newBoard);
+            parseStartupDeck(serializedGameWithoutMessage, newBoard);
 
             gameController.updateBoard(newBoard);
             return View.STARTUP;
         }
 
         throw new GameParsingException("i dont even know man, shit's fucked");
+    }
+
+    private static String getMessage(String serializedGame) {
+        return serializedGame.substring(serializedGame.indexOf("#") + 1);
     }
 
     /**

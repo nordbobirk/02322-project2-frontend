@@ -2,6 +2,7 @@ package yukon.view;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,7 +46,7 @@ public class StartupView {
 
         styleShowCardsButton(showCardsButton);
 
-        root = new VBox(new Header(buttons), getCardColumnBox());
+        root = new VBox(new Header(buttons), getCardColumnBox(), new Footer(List.of(new Label("Message: " + GameController.getInstance().getBoard().getMessage()))));
     }
 
     public VBox getRoot() {

@@ -1,6 +1,7 @@
 package yukon.view;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -58,7 +59,7 @@ public class GameView {
 
         styleAutoMoveButton(autoMoveButton);
 
-        root = new VBox(new Header(buttons), getCardBoxes());
+        root = new VBox(new Header(buttons), getCardBoxes(), new Footer(List.of(new Label("Message: " + GameController.getInstance().getBoard().getMessage()))));
     }
 
     public VBox getRoot() {
