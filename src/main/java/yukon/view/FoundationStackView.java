@@ -10,13 +10,16 @@ public class FoundationStackView extends Pane {
 
     private static final double CARD_WIDTH = 80;
     private static final double CARD_HEIGHT = 120;
-    private final SelectFoundationCallback selectFoundationCallback;
     private final int column;
     private Button topCardButton;
     private boolean selected;
 
-    public FoundationStackView(int column, SelectFoundationCallback selectFoundationCallback) {
+    private final SelectFoundationCallback selectFoundationCallback;
+    private final DeselectCallback deselectCallback;
+
+    public FoundationStackView(int column, SelectFoundationCallback selectFoundationCallback, DeselectCallback deselectCallback) {
         this.selectFoundationCallback = selectFoundationCallback;
+        this.deselectCallback = deselectCallback;
         this.column = column;
         this.selected = false;
         renderStack();
@@ -59,6 +62,7 @@ public class FoundationStackView extends Pane {
     private void toggleSelection() {
         if (selected) {
             clearHighlighting();
+            deselectCallback.deselect();
             selected = false;
         } else {
             highlight();

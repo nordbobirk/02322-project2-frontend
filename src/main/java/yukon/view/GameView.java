@@ -125,6 +125,10 @@ public class GameView {
         clearSelection();
     }
 
+    private void handleDeselect() {
+        clearSelection();
+    }
+
     private void clearSelection() {
         selectedColumn = null;
         selectedIndex = null;
@@ -132,22 +136,22 @@ public class GameView {
     }
 
     private HBox getCardColumnBox() {
-        CardColumnView column1View = new CardColumnView(1, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column2View = new CardColumnView(2, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column3View = new CardColumnView(3, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column4View = new CardColumnView(4, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column5View = new CardColumnView(5, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column6View = new CardColumnView(6, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column7View = new CardColumnView(7, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column1View = new CardColumnView(1, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column2View = new CardColumnView(2, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column3View = new CardColumnView(3, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column4View = new CardColumnView(4, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column5View = new CardColumnView(5, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column6View = new CardColumnView(6, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column7View = new CardColumnView(7, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
 
         return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
     }
 
     private VBox getFoundationStackBox() {
-        FoundationStackView foundation1View = new FoundationStackView(8, this::handleClickOnFoundation);
-        FoundationStackView foundation2View = new FoundationStackView(9, this::handleClickOnFoundation);
-        FoundationStackView foundation3View = new FoundationStackView(10, this::handleClickOnFoundation);
-        FoundationStackView foundation4View = new FoundationStackView(11, this::handleClickOnFoundation);
+        FoundationStackView foundation1View = new FoundationStackView(8, this::handleClickOnFoundation, this::handleDeselect);
+        FoundationStackView foundation2View = new FoundationStackView(9, this::handleClickOnFoundation, this::handleDeselect);
+        FoundationStackView foundation3View = new FoundationStackView(10, this::handleClickOnFoundation, this::handleDeselect);
+        FoundationStackView foundation4View = new FoundationStackView(11, this::handleClickOnFoundation, this::handleDeselect);
 
         return new VBox(10, foundation1View, foundation2View, foundation3View, foundation4View);
     }

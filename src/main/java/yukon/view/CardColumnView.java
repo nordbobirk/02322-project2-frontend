@@ -23,10 +23,12 @@ public class CardColumnView extends Pane {
 
     private final SelectColumnCallback selectColumnCallback;
     private final SelectEmptyColumnCallback selectEmptyColumnCallback;
+    private final DeselectCallback deselectCallback;
 
-    public CardColumnView(int column, boolean interactable, SelectColumnCallback selectColumnCallback, SelectEmptyColumnCallback selectEmptyColumnCallback) {
+    public CardColumnView(int column, boolean interactable, SelectColumnCallback selectColumnCallback, SelectEmptyColumnCallback selectEmptyColumnCallback, DeselectCallback deselectCallback) {
         this.selectColumnCallback = selectColumnCallback;
         this.selectEmptyColumnCallback = selectEmptyColumnCallback;
+        this.deselectCallback = deselectCallback;
         this.interactable = interactable;
         this.column = column;
         renderColumn();
@@ -93,6 +95,7 @@ public class CardColumnView extends Pane {
         if (selectedIndex != null && selectedIndex == index) {
             // Deselect
             clearHighlighting();
+            deselectCallback.deselect();
             selectedIndex = null;
         } else {
             // New selection

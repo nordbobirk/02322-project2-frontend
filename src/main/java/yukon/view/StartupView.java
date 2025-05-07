@@ -53,13 +53,13 @@ public class StartupView {
     }
 
     private HBox getCardColumnBox() {
-        CardColumnView column1View = new CardColumnView(1, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column2View = new CardColumnView(2, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column3View = new CardColumnView(3, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column4View = new CardColumnView(4, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column5View = new CardColumnView(5, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column6View = new CardColumnView(6, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
-        CardColumnView column7View = new CardColumnView(7, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn);
+        CardColumnView column1View = new CardColumnView(1, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column2View = new CardColumnView(2, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column3View = new CardColumnView(3, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column4View = new CardColumnView(4, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column5View = new CardColumnView(5, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column6View = new CardColumnView(6, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
+        CardColumnView column7View = new CardColumnView(7, true, this::handleClickOnNotEmptyColumn, this::handleClickOnEmptyColumn, this::handleDeselect);
 
         return new HBox(10, column1View, column2View, column3View, column4View, column5View, column6View, column7View);
     }
@@ -69,6 +69,10 @@ public class StartupView {
     }
 
     private void handleClickOnNotEmptyColumn(int column, int index) {
+        // clicks are ignored in STARTUP phase
+    }
+
+    private void handleDeselect() {
         // clicks are ignored in STARTUP phase
     }
 
