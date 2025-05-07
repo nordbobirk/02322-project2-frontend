@@ -12,7 +12,7 @@ public class FoundationStackView extends Pane {
     private static final double CARD_HEIGHT = 120;
     private final CardClickCallback cardClickCallback;
     private final int column;
-    private Button topCardButton = new Button();
+    private Button topCardButton;
     private boolean selected;
 
     public FoundationStackView(int column, CardClickCallback cardClickCallback) {
@@ -82,7 +82,8 @@ public class FoundationStackView extends Pane {
                 "-fx-border-width: 1;",
                 "-fx-font-weight: bold;",
                 "-fx-font-size: 16;",
-                "-fx-alignment: center;"
+                "-fx-alignment: center;",
+                "-fx-text-fill: black;"
         );
     }
 
@@ -93,15 +94,15 @@ public class FoundationStackView extends Pane {
                 "-fx-border-width: 3;",
                 "-fx-font-weight: bold;",
                 "-fx-font-size: 16;",
-                "-fx-alignment: center;"
+                "-fx-alignment: center;",
+                "-fx-text-fill: black;"
         );
     }
 
     private String formatCard(Card card) {
-        if (!card.isShown()) return "";
         char rank = yukon.model.Card.numberToChar(card.getNumber());
         char suit = yukon.model.Suit.toChar(card.getSuit());
-        return rank + String.valueOf(suit);
+        return "" + rank + suit;
     }
 
 }
